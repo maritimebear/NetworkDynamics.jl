@@ -87,36 +87,41 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     num_v = nv(g)
     num_e = ne(g)
 
-    s_e = src.(edges(g))
-    d_e = dst.(edges(g))
+    s_e = src.(edges(g)) # Indices of source-nodes of all edges
+    d_e = dst.(edges(g)) # Indices of destination-nodes of all edges
 
     # Initialize Vector of empty Vector{Int} for the edge indices per vertex
-    s_v = [Int[] for i in 1:num_v]
-    d_v = [Int[] for i in 1:num_v]
+    s_v = [Int[] for i in 1:num_v] # Indices of edges leaving each node
+    d_v = [Int[] for i in 1:num_v] # Indices of edges entering each node
     for i in 1:num_e
         push!(s_v[s_e[i]], i)
         push!(d_v[d_e[i]], i)
     end
 
 
+    # Vectors containing number of indices to be offset for each node/edge in the state vector,
+    # accounting for its number of dimensions
     v_offs = create_offsets(v_dims)
     e_offs = create_offsets(e_dims)
 
+    # Indices to access the state vector, accounting for the offsets from above
     v_idx = create_idxs(v_offs, v_dims)
     e_idx = create_idxs(e_offs, e_dims)
 
+    # Offsets of source- and destination-nodes for each edge
     s_e_offs = [v_offs[s_e[i_e]] for i_e in 1:num_e]
     d_e_offs = [v_offs[d_e[i_e]] for i_e in 1:num_e]
 
+    # State-vector-indices of source- and destination-nodes for each edge
     s_e_idx = [v_idx[s_e[i_e]] for i_e in 1:num_e]
     d_e_idx = [v_idx[d_e[i_e]] for i_e in 1:num_e]
 
     dst_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
     src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
 
-    for i_v in 1:nv(g)
-        offsdim_arr = Tuple{Int,Int}[]
-        for i_e in d_v[i_v]
+    for i_v in 1:nv(g) # for each node
+        offsdim_arr = Tuple{Int,Int}[] # TODO: Later converted to Vector{Tuple{Int, Int}} by push!()?
+        for i_e in d_v[i_v] # for each edge entering the current node
             # dims is a multiple of 2 for SimpleGraph by design of VertexFunction
             if !is_directed(g)
                 push!(offsdim_arr, (e_offs[i_e], e_dims[i_e] / 2))
@@ -124,7 +129,7 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
                 push!(offsdim_arr, (e_offs[i_e], e_dims[i_e]))
             end
         end
-        for i_e in s_v[i_v]
+        for i_e in s_v[i_v] # for each edge leaving the current node
             if !is_directed(g)
                 push!(offsdim_arr, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
             end
