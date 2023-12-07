@@ -78,8 +78,10 @@ struct GraphStruct
     s_e_idx::Vector{Idx}                       # idx-range of src-vertex per edge
     d_e_idx::Vector{Idx}                       # idx-range of dst-vertex per edge
 
-    dst_edges_dat::Vector{Vector{Tuple{Int,Int}}}
-    src_edges_dat::Vector{Vector{Tuple{Int, Int}}}
+    # index of node -> vector of edges, represented as tuples:
+    #   edge: (index of source node, index of destination node)
+    dst_edges_dat::Vector{Vector{Tuple{Int,Int}}} # edges entering node
+    src_edges_dat::Vector{Vector{Tuple{Int, Int}}} # edges leaving node
 end
 function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     num_v = nv(g)
