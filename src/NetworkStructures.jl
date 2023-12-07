@@ -79,6 +79,7 @@ struct GraphStruct
     d_e_idx::Vector{Idx}                       # idx-range of dst-vertex per edge
 
     dst_edges_dat::Vector{Vector{Tuple{Int,Int}}}
+    src_edges_dat::Vector{Vector{Tuple{Int, Int}}}
 end
 function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     num_v = nv(g)
@@ -109,6 +110,7 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     d_e_idx = [v_idx[d_e[i_e]] for i_e in 1:num_e]
 
     dst_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
+    src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
 
     for i_v in 1:nv(g)
         offsdim_arr = Tuple{Int,Int}[]
@@ -268,6 +270,7 @@ struct GraphData{GDB,elV,elE}
     v_s_e::Vector{VertexData{GDB,elV}} # the vertex that is the source of e
     v_d_e::Vector{VertexData{GDB,elV}} # the vertex that is the destination of e
     dst_edges::Vector{Vector{EdgeData{GDB,elE}}} # the half-edges that have v as destination
+    src_edges::Vector{Vector{EdgeData{GDB,elE}}} # the half-edges that have v as source
 end
 
 function GraphData(v_array::Tv, e_array::Te, gs::GraphStruct; global_offset=0) where {Tv,Te}
@@ -283,7 +286,9 @@ function GraphData(v_array::Tv, e_array::Te, gs::GraphStruct; global_offset=0) w
              for (offset, dim) in zip(gs.d_e_offs, gs.v_dims[gs.d_e])]
     dst_edges = [[EdgeData{GDB,elE}(gdb, offset + global_offset, dim) for (offset, dim) in in_edge]
                  for in_edge in gs.dst_edges_dat]
-    GraphData{GDB,elV,elE}(gdb, v, e, v_s_e, v_d_e, dst_edges)
+    src_edges = [[EdgeData{GDB,elE}(gdb, offset + global_offset, dim) for (offset, dim) in in_edge]
+                 for in_edge in gs.src_edges_dat]
+    GraphData{GDB,elV,elE}(gdb, v, e, v_s_e, v_d_e, dst_edges, src_edges)
 end
 
 
@@ -373,7 +378,7 @@ Returns a view-like access to the underlying data of destination vertex of the i
 
 Returns a Vector of view-like accesses to all the (half-)edges that have the i-th vertex as source (for directed graphs these are the out-edges).
 """
-@inline get_src_edges(gd::GraphData, i::Int) = error("Not implemented.")
+@inline get_src_edges(gd::GraphData, i::Int) = gd.src_edges[i]
 
 """
     get_dst_edges(gd::GraphData, i::Int)
