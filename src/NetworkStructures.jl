@@ -130,6 +130,8 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
             end
         end
         dst_edges_dat[i_v] = offsdim_arr
+        # TODO: Fill in placeholder
+        src_edges_dat[i_v] = offsdim_arr # Placeholder to work with tests
     end
 
     GraphStruct(num_v,
@@ -152,7 +154,8 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
                 d_e_offs,
                 s_e_idx,
                 d_e_idx,
-                dst_edges_dat)
+                dst_edges_dat,
+                src_edges_dat)
 end
 
 
