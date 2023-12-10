@@ -14,7 +14,7 @@ end
 
 @testset "Test GraphData Accessors -- directed graph" begin
     # Following existing testset "Test GraphData Accessors"
-    g = cycle_digraph(4)
+    g = wheel_digraph(5)
 
     ndims_edges = 3
     ndims_vertices = 2
