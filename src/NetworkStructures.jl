@@ -326,8 +326,8 @@ function GraphData(v_array::Tv, e_array::Te, gs::GraphStruct; global_offset=0) w
              for (offset, dim) in zip(gs.d_e_offs, gs.v_dims[gs.d_e])]
     dst_edges = [[EdgeData{GDB,elE}(gdb, offset + global_offset, dim) for (offset, dim) in in_edge]
                  for in_edge in gs.dst_edges_dat]
-    src_edges = [[EdgeData{GDB,elE}(gdb, offset + global_offset, dim) for (offset, dim) in in_edge]
-                 for in_edge in gs.src_edges_dat]
+    src_edges = [[EdgeData{GDB,elE}(gdb, offset + global_offset, dim) for (offset, dim) in out_edge]
+                 for out_edge in gs.src_edges_dat]
     GraphData{GDB,elV,elE}(gdb, v, e, v_s_e, v_d_e, dst_edges, src_edges)
 end
 
