@@ -45,10 +45,10 @@ end
     # incidence matrix:
     #   rows => nodes, columns => edges
     #   +1 => edge entering node, -1 => edge leaving node
-    edges_in::Dict{Int, Vector{Int}} = Dict(i => findall(==(1), incidence_matrix(g)[i, :])
+    edges_in::Dict{Int, Vector{Int}} = Dict(i => findall(x -> (x == 1), incidence_matrix(g)[i, :])
                                             for i in 1:nv(g)
                                            )
-    edges_out::Dict{Int, Vector{Int}} = Dict(i => findall(==(-1), incidence_matrix(g)[i, :])
+    edges_out::Dict{Int, Vector{Int}} = Dict(i => findall(x -> (x == -1), incidence_matrix(g)[i, :])
                                             for i in 1:nv(g)
                                            )
     @assert length(edges_in) == length(edges_out) == nv(g)
