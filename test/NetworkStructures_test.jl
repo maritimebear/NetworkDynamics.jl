@@ -4,6 +4,8 @@ using NetworkDynamics
 import NetworkDynamics: GraphStruct, GraphData, get_vertex, get_edge, get_src_vertex, get_src_edges, get_dst_vertex,
                         get_dst_edges, swap_v_array!, swap_e_array!
 
+# TODO: Cleanup
+import GLMakie, GraphMakie
 
 @testset "Test GraphData Accessors" begin
     g = SimpleGraph(5)
@@ -22,6 +24,12 @@ import NetworkDynamics: GraphStruct, GraphData, get_vertex, get_edge, get_src_ve
     v_array = rand(sum(v_dims))
     e_array = rand(sum(e_dims))
     gd = GraphData(v_array, e_array, gs)
+
+    # TODO: Cleanup
+    println("\n--------------\n")
+    display(GraphMakie.graphplot(g, ilabels=repr.(1:nv(g)), elabels=repr.(1:ne(g))))
+    @show e_array
+    println("\n--------------\n")
 
     @test get_vertex(gd, 1) == v_array[1:2]
     @test get_vertex(gd, 2) == v_array[3:4]

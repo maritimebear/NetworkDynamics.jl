@@ -146,13 +146,13 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     end
 
     # TODO: Cleanup
-    println("\n--------------\n")
-    println("Graph, directed: $(is_directed(g))")
-    foreach(e -> println(e), edges(g))
-    println("\n")
-    @show dst_edges_dat
-    println("\n--------------\n")
-    display(GraphMakie.graphplot(g, ilabels=repr.(1:nv(g)), elabels=repr.(1:ne(g))))
+    # println("\n--------------\n")
+    # println("Graph, directed: $(is_directed(g))")
+    # foreach(e -> println(e), edges(g))
+    # println("\n")
+    # @show dst_edges_dat
+    # println("\n--------------\n")
+    # display(GraphMakie.graphplot(g, ilabels=repr.(1:nv(g)), elabels=repr.(1:ne(g))))
 
 
     GraphStruct(num_v,
