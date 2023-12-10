@@ -7,6 +7,63 @@ import NetworkDynamics: GraphStruct, GraphData, get_vertex, get_edge, get_src_ve
 # TODO: Cleanup
 import GLMakie, GraphMakie
 
+# Test get_src_edges() for directed graphs
+function get_range(i, ndims)
+    # Convenience function to generate array-access indices in test
+    stop = i * ndims
+    start = max(1, stop - ndims + 1)
+    return start:stop
+end
+
+@testset "Test GraphData Accessors -- directed graph" begin
+    # Following existing testset "Test GraphData Accessors"
+    g = cycle_digraph(4)
+
+    ndims_edges = 3
+    ndims_vertices = 2
+
+    v_dims = [ndims_vertices for _ in vertices(g)]
+    e_dims = [ndims_edges for _ in edges(g)]
+    gs = GraphStruct(g, v_dims, e_dims, [:t], [:t])
+
+    v_array = rand(sum(v_dims))
+    e_array = rand(sum(e_dims))
+    gd = GraphData(v_array, e_array, gs)
+
+
+    for i in 1:nv(g)
+        @test get_vertex(gd, i) == v_array[get_range(i, ndims_vertices)]
+    end
+
+    for i in 1:ne(g)
+        @test get_edge(gd, i) == e_array[get_range(i, ndims_edges)]
+    end
+
+    edgelist = collect(edges(g))
+    for (i, edge) in enumerate(edgelist)
+        @test get_src_vertex(gd, i) == v_array[get_range(edge.src, ndims_vertices)]
+        @test get_dst_vertex(gd, i) == v_array[get_range(edge.dst, ndims_vertices)]
+    end
+
+    # Mapping node_idx => Vector{edge_idxs} to find edges entering and leaving each node
+    edges_in::Dict{Int, Vector{Int}} = Dict(i => findall(==(1), incidence_matrix(g)[i, :])
+                                            for i in 1:nv(g)
+                                           )
+    edges_out::Dict{Int, Vector{Int}} = Dict(i => findall(==(-1), incidence_matrix(g)[i, :])
+                                            for i in 1:nv(g)
+                                           )
+    @assert length(edges_in) == length(edges_out) == nv(g)
+
+    for idx_v in 1:nv(g)
+        @test get_src_edges(gd, idx_v) == [e_array[get_range(idx_e, ndims_edges)]
+                                           for idx_e in edges_out[idx_v]
+                                          ]
+        @test get_dst_edges(gd, idx_v) == [e_array[get_range(idx_e, ndims_edges)]
+                                           for idx_e in edges_in[idx_v]
+                                          ]
+    end
+end
+
 @testset "Test GraphData Accessors" begin
     g = SimpleGraph(5)
     add_edge!(g, (1, 2))
