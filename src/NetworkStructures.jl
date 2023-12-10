@@ -123,26 +123,26 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g)) # Outgoing edges for each node
 
     for i_v in 1:nv(g) # for each node
-        offsdim_arr = Tuple{Int,Int}[] # TODO: Later converted to Vector{Tuple{Int, Int}} by push!()?
+        edgesin_offsdim = Vector{Tuple{Int, Int}}(undef, 0)
+        edgesout_offsdim = Vector{Tuple{Int, Int}}(undef, 0)
         for i_e in d_v[i_v] # for each edge entering the current node
             # dims is a multiple of 2 for SimpleGraph by design of VertexFunction
             if !is_directed(g)
-                push!(offsdim_arr, (e_offs[i_e], e_dims[i_e] / 2))
+                push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e] / 2))
             else
-                push!(offsdim_arr, (e_offs[i_e], e_dims[i_e]))
+                push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e]))
             end
         end
         for i_e in s_v[i_v] # for each edge leaving the current node
             if !is_directed(g)
-                push!(offsdim_arr, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
+                push!(edgesin_offsdim, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
             end
         end
-        dst_edges_dat[i_v] = offsdim_arr
+        dst_edges_dat[i_v] = edgesin_offsdim
 
         # TODO: Cleanup
-        @show offsdim_arr
         # TODO: Fill in placeholder
-        src_edges_dat[i_v] = offsdim_arr # Placeholder to work with tests
+        src_edges_dat[i_v] = edgesin_offsdim # Placeholder to work with tests
     end
 
     # TODO: Cleanup
