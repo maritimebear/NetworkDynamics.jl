@@ -51,6 +51,7 @@ import GLMakie, GraphMakie
     @test get_dst_vertex(gd, 8) == v_array[9:10]
 
     # TODO: Remove test_throws thingy
+    # # Why e_array[i:i+1] instead of e_array[i:i] or [e_array[i]] ?
     # @test_throws ErrorException get_src_edges(gd, 1) == [e_array[1:2], e_array[3:4], e_array[5:6]]
     # @test_throws ErrorException get_src_edges(gd, 3) == [e_array[13:14], e_array[15:16]]
 
