@@ -5,7 +5,7 @@ import NetworkDynamics: GraphStruct, GraphData, get_vertex, get_edge, get_src_ve
                         get_dst_edges, swap_v_array!, swap_e_array!
 
 # Test get_src_edges() for directed graphs
-function get_range(i, ndims)
+function get_range(i::T, ndims::T) :: UnitRange{T} where T <: Integer
     # Convenience function to generate array-access indices in test
     stop = i * ndims
     start = max(1, stop - ndims + 1)
