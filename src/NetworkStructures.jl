@@ -119,8 +119,8 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     s_e_idx = [v_idx[s_e[i_e]] for i_e in 1:num_e]
     d_e_idx = [v_idx[d_e[i_e]] for i_e in 1:num_e]
 
-    dst_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
-    src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g))
+    dst_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g)) # For each node, vector of incoming edges
+    src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g)) # Outgoing edges for each node
 
     for i_v in 1:nv(g) # for each node
         offsdim_arr = Tuple{Int,Int}[] # TODO: Later converted to Vector{Tuple{Int, Int}} by push!()?
