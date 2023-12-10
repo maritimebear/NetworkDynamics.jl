@@ -147,9 +147,11 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
             # dims is a multiple of 2 for SimpleGraph by design of VertexFunction
             for i_e in d_v[i_v]
                 push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e] / 2))
+                push!(edgesout_offsdim, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
             end
             for i_e in s_v[i_v]
                 push!(edgesin_offsdim, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
+                push!(edgesout_offsdim, (e_offs[i_e], e_dims[i_e] / 2))
             end
             dst_edges_dat[i_v] = edgesin_offsdim
             src_edges_dat[i_v] = edgesout_offsdim
