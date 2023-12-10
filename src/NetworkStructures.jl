@@ -123,28 +123,39 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     dst_edges_dat = Vector{edge_access_type}(undef, nv(g)) # For each node, vector of incoming edges
     src_edges_dat = Vector{edge_access_type}(undef, nv(g)) # Outgoing edges for each node
 
-    for i_v in 1:nv(g) # for each node
-        edgesin_offsdim = Vector{Tuple{Int, Int}}(undef, 0)
-        edgesout_offsdim = Vector{Tuple{Int, Int}}(undef, 0)
-        for i_e in d_v[i_v] # for each edge entering the current node
-            # dims is a multiple of 2 for SimpleGraph by design of VertexFunction
-            if !is_directed(g)
-                push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e] / 2))
-            else
+    if is_directed(g)
+        for i_v in 1:nv(g) # for each node
+            edgesin_offsdim::edge_access_type = edge_access_type(undef, 0) # Empty Vector{Tuple{Int, Int}}
+            edgesout_offsdim::edge_access_type = edge_access_type(undef, 0)
+
+            # Populating vectors using loops to preserve eltypes in case d_v[i] or s_v[i] are empty
+            # Using map()/comprehension seems to change eltype to Tuple{Any, Any} if applied to an empty collection?
+            for i_e in d_v[i_v] # for each edge entering the current node
                 push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e]))
             end
-        end
-        for i_e in s_v[i_v] # for each edge leaving the current node
-            if !is_directed(g)
+            for i_e in s_v[i_v] # for each edge leaving the current node
+                push!(edgesout_offsdim, (e_offs[i_e], e_dims[i_e]))
+            end
+            dst_edges_dat[i_v] = edgesin_offsdim
+            src_edges_dat[i_v] = edgesout_offsdim
+        end # for each node
+
+    else # ie. g is non-directed
+        for i_v in 1:nv(g)
+        edgesin_offsdim::edge_access_type = edge_access_type(undef, 0) # Empty Vector{Tuple{Int, Int}}
+        edgesout_offsdim::edge_access_type = edge_access_type(undef, 0)
+            # dims is a multiple of 2 for SimpleGraph by design of VertexFunction
+            for i_e in d_v[i_v]
+                push!(edgesin_offsdim, (e_offs[i_e], e_dims[i_e] / 2))
+            end
+            for i_e in s_v[i_v]
                 push!(edgesin_offsdim, (e_offs[i_e] + e_dims[i_e] / 2, e_dims[i_e] / 2))
             end
-        end
-        dst_edges_dat[i_v] = edgesin_offsdim
+            dst_edges_dat[i_v] = edgesin_offsdim
+            src_edges_dat[i_v] = edgesout_offsdim
+        end # for each node
 
-        # TODO: Cleanup
-        # TODO: Fill in placeholder
-        src_edges_dat[i_v] = edgesin_offsdim # Placeholder to work with tests
-    end
+    end # if
 
     # TODO: Cleanup
     # println("\n--------------\n")
