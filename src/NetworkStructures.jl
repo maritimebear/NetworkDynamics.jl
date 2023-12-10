@@ -119,8 +119,9 @@ function GraphStruct(g, v_dims, e_dims, v_syms, e_syms)
     s_e_idx = [v_idx[s_e[i_e]] for i_e in 1:num_e]
     d_e_idx = [v_idx[d_e[i_e]] for i_e in 1:num_e]
 
-    dst_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g)) # For each node, vector of incoming edges
-    src_edges_dat = Vector{Vector{Tuple{Int,Int}}}(undef, nv(g)) # Outgoing edges for each node
+    edge_access_type::DataType = Vector{Tuple{Int, Int}} # For convenience and type-checking
+    dst_edges_dat = Vector{edge_access_type}(undef, nv(g)) # For each node, vector of incoming edges
+    src_edges_dat = Vector{edge_access_type}(undef, nv(g)) # Outgoing edges for each node
 
     for i_v in 1:nv(g) # for each node
         edgesin_offsdim = Vector{Tuple{Int, Int}}(undef, 0)
