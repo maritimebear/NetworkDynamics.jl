@@ -191,7 +191,7 @@ Base.@kwdef struct GenericODEVertex{T} <: VertexFunction
     function GenericODEVertex(f::T, dim::Int, mass_matrix=I, sym=[:v for _ in 1:dim]) where T
         _dimcheck(dim, sym)
         _argcheck(f, 6)
-        return new{typeof(T)}(f, dim, mass_matrix, sym)
+        return new{typeof(f)}(f, dim, mass_matrix, sym)
     end
 end
 
