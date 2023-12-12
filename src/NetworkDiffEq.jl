@@ -66,6 +66,22 @@ function _inner_loop!(component::StaticEdge, indices,
     return nothing
 end
 
+
+# inner loops for GenericODEVertex, can access incoming and outgoing edges
+function _inner_loop!(component::GenericODEVertex, indices,
+                      dx, p, t, gd, gs, _, parallel)
+    @nd_threads parallel for i in indices
+        component.f(view(dx, gs.v_idx[i]),
+                    get_vertex(gd, i),
+                    get_dst_edges(gd, i), # edges entering GenericODEVertex
+                    get_src_edges(gd, i), # edges leaving GenericODEVertex
+                    p_v_idx(p, i),
+                    t)
+    end
+    return nothing
+end
+
+
 # inner loops for DDE + Static Delay
 
 function _inner_loop!(component::DDEVertex, indices,
