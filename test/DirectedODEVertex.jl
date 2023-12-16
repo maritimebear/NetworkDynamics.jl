@@ -2,7 +2,6 @@
 # Following NetworkDynamics v0.4.0 tutorials as these use incoming and outgoing edges at each vertex
 
 import Graphs as gr
-import GLMakie, GraphMakie # TODO: Cleanup
 import Plots as plt # TODO: Cleanup
 import NetworkDynamics as nd
 import DifferentialEquations as de
@@ -38,8 +37,6 @@ edge_coupling = Dict(true => :directed,
                      false => :undefined) # graph directivity => edge coupling type
 
 
-# display(GraphMakie.graphplot(g, ilabels=repr.(1:gr.nv(g)), elabels=repr.(1:gr.ne(g)))) # TODO: Cleanup
-
 vertexfn = nd.DirectedODEVertex(f=diffusionvertex!, dim=1)
 edgefn = nd.StaticEdge(f=diffusionedge!, dim=1, coupling=edge_coupling[graph_isdirected])
 
@@ -49,5 +46,3 @@ prob = de.ODEProblem(nd_fn, sol_init, timespan)
 sol = de.solve(prob, de.Tsit5())
 
 display(plt.plot(sol, vars=nd.syms_containing(nd_fn, "v"))) # TODO: Cleanup
-
-
