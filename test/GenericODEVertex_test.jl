@@ -38,7 +38,7 @@ edge_coupling = Dict(true => :directed,
                      false => :undefined) # graph directivity => edge coupling type
 
 
-display(GraphMakie.graphplot(g, ilabels=repr.(1:gr.nv(g)), elabels=repr.(1:gr.ne(g)))) # TODO: Cleanup
+# display(GraphMakie.graphplot(g, ilabels=repr.(1:gr.nv(g)), elabels=repr.(1:gr.ne(g)))) # TODO: Cleanup
 
 vertexfn = nd.GenericODEVertex(f=diffusionvertex!, dim=1)
 edgefn = nd.StaticEdge(f=diffusionedge!, dim=1, coupling=edge_coupling[graph_isdirected])
