@@ -192,7 +192,7 @@ end
 ## ODEEdge
 
 # function _network_dynamics(vertices!::Union{Vector{T},T}, edges!::Union{Vector{U},U}, graph; x_prototype=zeros(1), parallel=false) where {T<:ODEVertex, U<:ODEEdge}
-function _network_dynamics(vertices!::Union{Vector{T},T}, edges!::Union{Vector{U},U}, graph; x_prototype=zeros(1), parallel=false) where {T<:Union{ODEVertex, GenericODEVertex}, U<:ODEEdge}
+function _network_dynamics(vertices!::Union{Vector{T},T}, edges!::Union{Vector{U},U}, graph; x_prototype=zeros(1), parallel=false) where {T<:Union{ODEVertex, DirectedODEVertex}, U<:ODEEdge}
 
     warn_parallel(parallel)
 

@@ -17,7 +17,7 @@ export ODEVertex
 export ODEEdge
 export DDEVertex
 export StaticDelayEdge
-export GenericODEVertex
+export DirectedODEVertex
 
 """
 Abstract supertype for all vertex functions.
@@ -172,7 +172,7 @@ end
 
 
 """
-    GenericODEVertex(;f, dim, mass_matrix, sym)
+    DirectedODEVertex(;f, dim, mass_matrix, sym)
 
 Similar to ODEVertex, except outgoing edge states are also accessible to the function `f`.
 
@@ -182,13 +182,13 @@ Signature of `f`:
 The outgoing edge states are accessed as-is, without any implicit sign-changes (ie. no silent
 multiplication with -1 for outgoing edge states)
 """
-Base.@kwdef struct GenericODEVertex{T} <: VertexFunction
+Base.@kwdef struct DirectedODEVertex{T} <: VertexFunction
     f::T # signature (dv, v, edges_in, edges_out, p, t) -> Nothing
     dim::Int
     mass_matrix = I
     sym = [:v for _ in 1:dim]
 
-    function GenericODEVertex(f::T, dim::Int, mass_matrix=I, sym=[:v for _ in 1:dim]) where T
+    function DirectedODEVertex(f::T, dim::Int, mass_matrix=I, sym=[:v for _ in 1:dim]) where T
         _dimcheck(dim, sym)
         _argcheck(f, 6)
         return new{typeof(f)}(f, dim, mass_matrix, sym)

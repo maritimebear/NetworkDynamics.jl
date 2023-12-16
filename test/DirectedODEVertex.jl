@@ -1,4 +1,4 @@
-# Test GenericODEVertex by accessing both incoming and outgoing edges
+# Test DirectedODEVertex by accessing both incoming and outgoing edges
 # Following NetworkDynamics v0.4.0 tutorials as these use incoming and outgoing edges at each vertex
 
 import Graphs as gr
@@ -40,7 +40,7 @@ edge_coupling = Dict(true => :directed,
 
 # display(GraphMakie.graphplot(g, ilabels=repr.(1:gr.nv(g)), elabels=repr.(1:gr.ne(g)))) # TODO: Cleanup
 
-vertexfn = nd.GenericODEVertex(f=diffusionvertex!, dim=1)
+vertexfn = nd.DirectedODEVertex(f=diffusionvertex!, dim=1)
 edgefn = nd.StaticEdge(f=diffusionedge!, dim=1, coupling=edge_coupling[graph_isdirected])
 
 nd_fn = nd.network_dynamics(vertexfn, edgefn, g)
