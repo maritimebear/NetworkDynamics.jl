@@ -192,7 +192,15 @@ end
 ## ODEEdge
 
 # function _network_dynamics(vertices!::Union{Vector{T},T}, edges!::Union{Vector{U},U}, graph; x_prototype=zeros(1), parallel=false) where {T<:ODEVertex, U<:ODEEdge}
-function _network_dynamics(vertices!::Union{Vector{T},T}, edges!::Union{Vector{U},U}, graph; x_prototype=zeros(1), parallel=false) where {T<:Union{ODEVertex, DirectedODEVertex}, U<:ODEEdge}
+function _network_dynamics(vertices!::Union{Vector{T},T},
+                            edges!::Union{Vector{U},U},
+                            graph; x_prototype=zeros(1),
+                            parallel=false) where {T<:Union{ODEVertex, DirectedODEVertex},
+                                                   U<:ODEEdge}
+
+    if T == DirectedODEVertex && !is_directed(graph)
+        throw(ArgumentError("DirectedODEVertex can only be used with directed graphs"))
+    end
 
     warn_parallel(parallel)
 
