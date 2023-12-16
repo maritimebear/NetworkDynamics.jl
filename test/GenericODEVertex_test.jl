@@ -29,7 +29,7 @@ end
 
 n_nodes = 20
 degree = 4
-graph_isdirected = false
+graph_isdirected = true
 timespan = (0.0, 4.0)
 
 
