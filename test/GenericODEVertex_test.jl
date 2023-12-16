@@ -14,13 +14,16 @@ function diffusionedge!(e, v_s, v_d, p, t)
 end
 
 function diffusionvertex!(dv, v, edges_in, edges_out, p, t)
-    dv .= 0.0
-    for e in edges_in # ie. this node is the destination
-        dv .+= e
-    end
-    for e in edges_out # ie. this node is the source
-        dv .-= e
-    end
+    # dv .= 0.0
+    # for e in edges_in # ie. this node is the destination
+    #     dv .+= e
+    # end
+    # for e in edges_out # ie. this node is the source
+    #     dv .-= e
+    # end
+    dv .= sum(map(e -> e[1], edges_in)) - sum(map(e -> e[1], edges_out))
+        # Access underlying value from NetworkDynamics wrapper structs
+
     return nothing
 end
 
